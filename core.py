@@ -50,13 +50,12 @@ class Core(AbstractCore):
         validation_url = ValidateUrl(message.text)
 
         if validation_url.validate():
-            domen = validation_url.parse_url()[0]
+            domen = validation_url.parse_url()
             send_message = await self.bot.send_message(message.chat.id, "Ваш запрос принят")
             shooter = Shooter(message)
 
-            await shooter.get_screen_page(validation_url.url)
+            await shooter.get_screen_and_save_page(message, validation_url.url, domen)
 
-            await shooter.save_screen(message, validation_url.url, domen)
 
             await self.bot.edit_message_text('text',
                                              message.chat.id,

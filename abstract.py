@@ -27,12 +27,9 @@ class AbstractPostgresQL(ABC):
 
 class AbstractShooter(ABC):
     @abstractmethod
-    async def get_screen_page(self, url):
+    async def get_screen_and_save_page(self, message, url, domen):
         pass
 
-    @abstractmethod
-    async def save_screen(self, message, url, domen):
-        pass
 
 class AbstractValidateUrl(ABC):
     @abstractmethod
