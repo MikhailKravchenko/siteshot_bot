@@ -9,7 +9,7 @@ WEBHOOK_SSL_PRIV = '/home/lukas/cert/webhook_pkey.pem'  # Path to the ssl privat
 WEBHOOK_URL_BASE = "https://{}:{}".format(WEBHOOK_HOST, WEBHOOK_PORT)
 WEBHOOK_URL_PATH = "/{}/".format(token)
 
-DATABASE_HOST = "localhost"
+DATABASE_HOST = "postgres"
 DATABASE_PORT = "5432"
 DATABASE_USERNAME = "jpeger_user"
 DATABASE_PASSWORD = "JpE34g487ER!"
