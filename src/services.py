@@ -3,7 +3,7 @@ import re
 import time
 from datetime import datetime
 from pyppeteer import launch
-
+from decor import exception, info_log, info_log_message_async
 from abstract import AbstractShooter, AbstractValidateUrl
 from urllib.parse import urlparse
 
@@ -26,6 +26,8 @@ class ValidateUrl(AbstractValidateUrl):
     def __init__(self, url):
         self.url = url
 
+    @info_log
+    @exception
     def validate(self):
         if re.match(ValidateUrl.template_url_http, self.url) is not None:
             return True
@@ -34,7 +36,8 @@ class ValidateUrl(AbstractValidateUrl):
             return True
         else:
             return False
-
+    @info_log
+    @exception
     def parse_url(self):
         return urlparse(self.url).netloc
 
@@ -44,10 +47,11 @@ class Shooter(AbstractShooter):
         self.message = message
         self._error = False
 
+    @info_log_message_async
     async def get_screen_and_save_page(self, message, url, domen):
         starttime = time.time()
-        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-        # browser = await launch()
+        # browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        browser = await launch()
 
         page = await browser.newPage()
 
@@ -76,7 +80,7 @@ class Statistic:
     def __init__(self, db_worker):
         self.db_worker = db_worker
         pass
-
+    @info_log
     def get_statistic_for_admin(self):
         count_requests, count_success_requests, count_not_success_requests, top_domen, top_users = self.db_worker.get_statistic()
         text_url = ''

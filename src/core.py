@@ -6,13 +6,12 @@ import telebot
 import ssl
 
 from abstract import AbstractCore
-from loging import logging
 from services import Shooter, ValidateUrl, Statistic
 from env import *
 from aiohttp import web
-from datetime import datetime
 from telebot.async_telebot import AsyncTeleBot
 from telebot import types
+from decor import exception, info_log_message_async, info_log_message_async_callback
 
 from PostgreSQL import PostgreSQL
 
@@ -24,31 +23,39 @@ class Core(AbstractCore):
         self.bot = AsyncTeleBot(token)
 
         @self.bot.message_handler(commands=['start'])
+        @exception
         async def _command_start(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_comand_start(message)
 
         @self.bot.message_handler(commands=['admin'])
+        @exception
         async def _command_admin(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_comand_admin(message)
 
         @self.bot.message_handler(commands=['setadminchat'])
+        @exception
         async def _command_set_admin_chat(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_set_admin_chat(message)
 
         @self.bot.message_handler(commands=['statistic'])
+        @exception
         async def _command_statistic(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_get_statistic(message)
 
         @self.bot.message_handler(commands=['topusers'])
+        @exception
         async def _command_topusers(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_get_topusers(message)
 
         @self.bot.message_handler(func=lambda message: True, content_types=['text'])
+        @exception
         async def _check_text_and_get_screen(message):
             await self.process_check_text_and_get_screen(message)
 
         @self.bot.callback_query_handler(func=lambda c: True)
-        async def process_callback_btn(callback_query: types.CallbackQuery):
+        @exception
+        @info_log_message_async_callback
+        async def process_callback_btn(callback_query: types.CallbackQuery, *args):
             callback_data = callback_query.data
             url_ip = f'http://ip-api.com/json/{callback_data}?fields=query,continent,country,city,isp,org'
             getinfo = urllib.request.urlopen(url_ip)
@@ -69,8 +76,9 @@ class Core(AbstractCore):
                                                       f'Организация: {org}\n',
                                                  show_alert=True)
 
+    @info_log_message_async
+    @exception
     async def process_comand_start(self, message):
-        # j = 3/0
         db_worker = PostgreSQL()
         if not db_worker.set_user_info_in_db(message):
             db_worker.update_user_in_db(message)
@@ -80,6 +88,8 @@ class Core(AbstractCore):
                                     f'• С помощью бота вы можете проверять подозрительные ссылки. (Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)\n'
                                     f'• Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, которые отправляют пользователи')
 
+    @info_log_message_async
+    @exception
     async def process_comand_admin(self, message):
         db_worker = PostgreSQL()
         admin_chat_id = db_worker.get_admin_chat_id()
@@ -93,6 +103,8 @@ class Core(AbstractCore):
                                         f'/statistic - Получить статистику работы бота \n'
                                         f'/topusers - Топ пользователей по количеству запросов')
 
+    @info_log_message_async
+    @exception
     async def process_set_admin_chat(self, message):
         db_worker = PostgreSQL()
 
@@ -105,30 +117,20 @@ class Core(AbstractCore):
             await self.bot.send_message(message.chat.id,
                                         f'У этого бота уже назначен административный чат')
 
+    @info_log_message_async
+    @exception
     async def process_get_statistic(self, message):
         db_worker = PostgreSQL()
 
         statistic = Statistic(db_worker)
         get_statistic = statistic.get_statistic_for_admin()
         await self.bot.send_message(message.chat.id, get_statistic)
-
-    async def process_get_topusers(self, message):
-        pass
-
+    @info_log_message_async
+    @exception
     async def process_check_text_and_get_screen(self, message):
 
         db_worker = PostgreSQL()
         db_worker.update_user_in_db(message)
-
-        if message.chat.first_name:
-            first_name = message.chat.first_name
-        else:
-            first_name = message.from_user.first_name
-        d = {'facility': 'answer', 'user.id': str(message.from_user.id), 'first_name': str(first_name),
-             'text': str(message.text),
-             'time_answer':
-                 str(datetime.utcfromtimestamp(message.date).strftime('%Y-%m-%d %H:%M:%S'))}
-        logging.info('User Message', extra=d)
 
         validation_url = ValidateUrl(message.text)
 
@@ -168,6 +170,8 @@ class Core(AbstractCore):
             await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
             db_worker.set_statistic_succses_true(message, validation_url.url, domen, filename, file_path, duration)
 
+    @info_log_message_async
+    @exception
     async def get_data(self, request):
         if request.match_info.get('token') == self.bot.token:
             request_body_dict = await request.json()
@@ -177,11 +181,13 @@ class Core(AbstractCore):
         else:
             return web.Response(status=403)
 
+    @exception
     async def run(self):
         await self.bot.remove_webhook()
 
         await self.bot.polling(non_stop=True, skip_pending=True, timeout=40, request_timeout=40)  # to skip updates
 
+    @exception
     def run_webhook(self):
         # Set webhook run_webhooks
         self.bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
