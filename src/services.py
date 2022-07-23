@@ -56,15 +56,16 @@ class Shooter(AbstractShooter):
             await page.goto(url)
         except:
             self._error = True
-            return None, None, None
-        filename = f'storage/{datetime.utcfromtimestamp(message.date).strftime("%Y_%m_%d_%H_%M_%S")}_{message.chat.id}_{domen.replace(".", "_")}.png'
+            return None, None, None, None
+        filename = f'{datetime.utcfromtimestamp(message.date).strftime("%Y_%m_%d_%H_%M_%S")}_{message.chat.id}_{domen.replace(".", "_")}.png'
+        file_path = 'storage/' + filename
         try:
-            await page.screenshot({'path': filename, })
+            await page.screenshot({'path': file_path, })
         except:
             self._error = True
-            return None, None, None
+            return None, None, None,None
         title = await page.title()
         await browser.close()
         endtime = time.time()
         duration = endtime - starttime
-        return filename, title, duration
+        return filename, file_path, title, duration

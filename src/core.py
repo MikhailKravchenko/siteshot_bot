@@ -14,6 +14,8 @@ from datetime import datetime
 from telebot.async_telebot import AsyncTeleBot
 from telebot import types
 
+from PostgreSQL import PostgreSQL
+
 app = web.Application()
 
 
@@ -52,6 +54,10 @@ class Core(AbstractCore):
                                                  show_alert=True)
 
     async def process_comand_start(self, message):
+        db_worker = PostgreSQL()
+        if not db_worker.set_user_info_in_db(message):
+            db_worker.update_user_in_db(message)
+
         await self.bot.send_message(message.chat.id,
                                     f'👋🏻 Привет! Меня зовут Jpeger. Я - Бот для создания веб-скриншотов.Чтобы получить скриншот - отправьте URL адрес сайта. Например, wikipedia.org \n'
                                     f'• С помощью бота вы можете проверять подозрительные ссылки. (Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)\n'
@@ -59,19 +65,20 @@ class Core(AbstractCore):
 
     async def process_check_text_and_get_screen(self, message):
 
-        try:
-            if message.chat.first_name:
-                first_name = message.chat.first_name
-            else:
-                first_name = message.from_user.first_name
-            d = {'facility': 'answer', 'user.id': str(message.from_user.id), 'first_name': str(first_name),
-                 'text': str(message.text),
-                 'time_answer':
-                     str(datetime.utcfromtimestamp(message.date).strftime('%Y-%m-%d %H:%M:%S'))}
-            logging.info('User Message', extra=d)
+        db_worker = PostgreSQL()
+        db_worker.update_user_in_db(message)
 
-        except:
-            pass
+        if message.chat.first_name:
+            first_name = message.chat.first_name
+        else:
+            first_name = message.from_user.first_name
+        d = {'facility': 'answer', 'user.id': str(message.from_user.id), 'first_name': str(first_name),
+             'text': str(message.text),
+             'time_answer':
+                 str(datetime.utcfromtimestamp(message.date).strftime('%Y-%m-%d %H:%M:%S'))}
+        logging.info('User Message', extra=d)
+
+
         validation_url = ValidateUrl(message.text)
 
         if validation_url.validate():
@@ -82,7 +89,7 @@ class Core(AbstractCore):
                                                        reply_to_message_id=message.message_id, parse_mode="Markdown")
             shooter = Shooter(message)
 
-            filename, title, duration = await shooter.get_screen_and_save_page(message, validation_url.url, domen)
+            filename, file_path, title, duration = await shooter.get_screen_and_save_page(message, validation_url.url, domen)
             if shooter._error:
                 img = open('animation.gif.mp4', 'rb')
                 await self.bot.send_video(message.chat.id, img)
@@ -90,8 +97,11 @@ class Core(AbstractCore):
                 await self.bot.send_message(message.chat.id, f'*Ошибка выполнения запроса*',
                                             parse_mode="Markdown")
                 await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
+                db_worker.set_statistic_succses_false(message, validation_url.url, domen, filename, file_path, duration)
 
-            with open(filename, 'rb') as file:
+                return
+
+            with open(file_path, 'rb') as file:
                 markup = types.InlineKeyboardMarkup(row_width=1)
                 button = types.InlineKeyboardButton(u'\U0001F52C' + ' Подробнее', callback_data=str(domen))
                 markup.add(button)
@@ -104,6 +114,7 @@ class Core(AbstractCore):
                                           parse_mode="Markdown")
 
             await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
+            db_worker.set_statistic_succses_true(message, validation_url.url, domen, filename, file_path, duration)
         else:
             await self.bot.send_message(message.chat.id, "Не верный ULR")
 

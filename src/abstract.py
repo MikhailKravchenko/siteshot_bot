@@ -17,7 +17,11 @@ class AbstractCore(ABC):
 
 class AbstractPostgresQL(ABC):
     @abstractmethod
-    def set_statistic(self):
+    def set_statistic_succses_true(self, message, url, domen, file_name, file_path, duration):
+        pass
+
+    @abstractmethod
+    def set_statistic_succses_false(self, message, url, domen, file_name, file_path, duration):
         pass
 
     @abstractmethod

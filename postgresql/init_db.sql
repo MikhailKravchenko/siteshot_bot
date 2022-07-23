@@ -1,4 +1,4 @@
-create table "user"
+create table users
 (
     user_id    int not null
         constraint user_pk
@@ -19,7 +19,7 @@ create table request
     success    boolean,
     user_id    integer
         constraint request_user_user_id_fk
-            references "user"
+            references users
             on update cascade on delete cascade,
     file_name  varchar(50),
     file_path  varchar(250),
