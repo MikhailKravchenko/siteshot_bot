@@ -7,7 +7,7 @@ import ssl
 
 from abstract import AbstractCore
 from loging import logging
-from services import Shooter, ValidateUrl
+from services import Shooter, ValidateUrl, Statistic
 from env import *
 from aiohttp import web
 from datetime import datetime
@@ -27,12 +27,28 @@ class Core(AbstractCore):
         async def _command_start(message: telebot.types.Message or telebot.types.CallbackQuery):
             await self.process_comand_start(message)
 
+        @self.bot.message_handler(commands=['admin'])
+        async def _command_admin(message: telebot.types.Message or telebot.types.CallbackQuery):
+            await self.process_comand_admin(message)
+
+        @self.bot.message_handler(commands=['setadminchat'])
+        async def _command_set_admin_chat(message: telebot.types.Message or telebot.types.CallbackQuery):
+            await self.process_set_admin_chat(message)
+
+        @self.bot.message_handler(commands=['statistic'])
+        async def _command_statistic(message: telebot.types.Message or telebot.types.CallbackQuery):
+            await self.process_get_statistic(message)
+
+        @self.bot.message_handler(commands=['topusers'])
+        async def _command_topusers(message: telebot.types.Message or telebot.types.CallbackQuery):
+            await self.process_get_topusers(message)
+
         @self.bot.message_handler(func=lambda message: True, content_types=['text'])
         async def _check_text_and_get_screen(message):
             await self.process_check_text_and_get_screen(message)
 
         @self.bot.callback_query_handler(func=lambda c: True)
-        async def process_callback_btn_detailed(callback_query: types.CallbackQuery):
+        async def process_callback_btn(callback_query: types.CallbackQuery):
             callback_data = callback_query.data
             url_ip = f'http://ip-api.com/json/{callback_data}?fields=query,continent,country,city,isp,org'
             getinfo = urllib.request.urlopen(url_ip)
@@ -54,6 +70,7 @@ class Core(AbstractCore):
                                                  show_alert=True)
 
     async def process_comand_start(self, message):
+        # j = 3/0
         db_worker = PostgreSQL()
         if not db_worker.set_user_info_in_db(message):
             db_worker.update_user_in_db(message)
@@ -62,6 +79,41 @@ class Core(AbstractCore):
                                     f'👋🏻 Привет! Меня зовут Jpeger. Я - Бот для создания веб-скриншотов.Чтобы получить скриншот - отправьте URL адрес сайта. Например, wikipedia.org \n'
                                     f'• С помощью бота вы можете проверять подозрительные ссылки. (Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)\n'
                                     f'• Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, которые отправляют пользователи')
+
+    async def process_comand_admin(self, message):
+        db_worker = PostgreSQL()
+        admin_chat_id = db_worker.get_admin_chat_id()
+        if not admin_chat_id:
+            await self.bot.send_message(message.chat.id, f'Административного чата еще нет.\n'
+                                                         f'Чтобы сделать этот чат чатом администратора бота,'
+                                                         f' введите команду /setadminchat')
+            return
+        if admin_chat_id[0][0] == message.chat.id:
+            await self.bot.send_message(message.chat.id,
+                                        f'/statistic - Получить статистику работы бота \n'
+                                        f'/topusers - Топ пользователей по количеству запросов')
+
+    async def process_set_admin_chat(self, message):
+        db_worker = PostgreSQL()
+
+        if db_worker.set_admin_chat_in_db(message):
+
+            await self.bot.send_message(message.chat.id,
+                                        f'Теперь этот чат административный, вам доступны все команды администратора \n'
+                                        f'Для вывода списка комманд /admin')
+        else:
+            await self.bot.send_message(message.chat.id,
+                                        f'У этого бота уже назначен административный чат')
+
+    async def process_get_statistic(self, message):
+        db_worker = PostgreSQL()
+
+        statistic = Statistic(db_worker)
+        get_statistic = statistic.get_statistic_for_admin()
+        await self.bot.send_message(message.chat.id, get_statistic)
+
+    async def process_get_topusers(self, message):
+        pass
 
     async def process_check_text_and_get_screen(self, message):
 
@@ -78,7 +130,6 @@ class Core(AbstractCore):
                  str(datetime.utcfromtimestamp(message.date).strftime('%Y-%m-%d %H:%M:%S'))}
         logging.info('User Message', extra=d)
 
-
         validation_url = ValidateUrl(message.text)
 
         if validation_url.validate():
@@ -89,7 +140,8 @@ class Core(AbstractCore):
                                                        reply_to_message_id=message.message_id, parse_mode="Markdown")
             shooter = Shooter(message)
 
-            filename, file_path, title, duration = await shooter.get_screen_and_save_page(message, validation_url.url, domen)
+            filename, file_path, title, duration = await shooter.get_screen_and_save_page(message, validation_url.url,
+                                                                                          domen)
             if shooter._error:
                 img = open('animation.gif.mp4', 'rb')
                 await self.bot.send_video(message.chat.id, img)
@@ -115,8 +167,6 @@ class Core(AbstractCore):
 
             await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
             db_worker.set_statistic_succses_true(message, validation_url.url, domen, filename, file_path, duration)
-        else:
-            await self.bot.send_message(message.chat.id, "Не верный ULR")
 
     async def get_data(self, request):
         if request.match_info.get('token') == self.bot.token:
@@ -130,7 +180,7 @@ class Core(AbstractCore):
     async def run(self):
         await self.bot.remove_webhook()
 
-        await self.bot.polling(non_stop=True, skip_pending=True)  # to skip updates
+        await self.bot.polling(non_stop=True, skip_pending=True, timeout=40, request_timeout=40)  # to skip updates
 
     def run_webhook(self):
         # Set webhook run_webhooks

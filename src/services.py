@@ -63,9 +63,35 @@ class Shooter(AbstractShooter):
             await page.screenshot({'path': file_path, })
         except:
             self._error = True
-            return None, None, None,None
+            return None, None, None, None
         title = await page.title()
         await browser.close()
         endtime = time.time()
         duration = endtime - starttime
         return filename, file_path, title, duration
+
+
+class Statistic:
+
+    def __init__(self, db_worker):
+        self.db_worker = db_worker
+        pass
+
+    def get_statistic_for_admin(self):
+        count_requests, count_success_requests, count_not_success_requests, top_domen, top_users = self.db_worker.get_statistic()
+        text_url = ''
+        for i, domen in enumerate(top_domen):
+            text_url += f'{i + 1}. {domen[0]} количество запросов {domen[1]}\n'
+
+        text_users = ''
+        for i, user in enumerate(top_users):
+            text_users += f'{i + 1}. ID: {user[0]}, username: {"отсутствует" if user[1] is None else user[1]},' \
+                          f' first_name: {"отсутствует" if user[2] is None else user[2]},' \
+                          f' количество запросов {user[3]}\n'
+        text = f'Количество запросов за все время: {count_requests[0][0]}\n' \
+               f'Удачных запросов: {count_success_requests[0][0]}\n' \
+               f'Неудачных запросов: {count_not_success_requests[0][0]}\n' \
+               f'Топ URL: \n{text_url}\n' \
+               f'Топ пользователей:\n{text_users} '
+
+        return text

@@ -38,3 +38,22 @@ create unique index request_request_id_uindex
 create unique index request_request_id_uindex
     on request (request_id);
 
+create table admin_chat
+(
+    admin_chat_id serial
+        constraint admin_chat_pk
+            primary key,
+    chat_id       bigint
+);
+
+alter table admin_chat
+    owner to jpeger_user;
+
+create unique index admin_chat_admin_chat_id_uindex
+    on admin_chat (admin_chat_id);
+
+create unique index admin_chat_chat_id_uindex
+    on admin_chat (chat_id);
+
+
+
