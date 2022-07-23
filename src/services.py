@@ -50,8 +50,8 @@ class Shooter(AbstractShooter):
     @info_log_message_async
     async def get_screen_and_save_page(self, message, url, domen):
         starttime = time.time()
-        # browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-        browser = await launch()
+        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        # browser = await launch()
 
         page = await browser.newPage()
 

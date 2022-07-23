@@ -13,7 +13,7 @@ def create_logger():
     logger.setLevel(logging.INFO)
 
     # create the logging file handler
-    fh = logging.FileHandler("log/siteshot_worklog.log")
+    fh = logging.FileHandler("/src/log/siteshot_worklog.log")
 
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     formatter = logging.Formatter(format)

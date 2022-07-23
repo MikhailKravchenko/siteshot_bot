@@ -6,6 +6,7 @@ import telebot
 import ssl
 
 from abstract import AbstractCore
+from loging import logging
 from services import Shooter, ValidateUrl, Statistic
 from env import *
 from aiohttp import web
