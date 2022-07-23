@@ -9,12 +9,9 @@ WEBHOOK_SSL_PRIV = '/home/lukas/cert/webhook_pkey.pem'  # Path to the ssl privat
 WEBHOOK_URL_BASE = "https://{}:{}".format(WEBHOOK_HOST, WEBHOOK_PORT)
 WEBHOOK_URL_PATH = "/{}/".format(token)
 
-DATABASE_HOST = "217.163.29.237"
+DATABASE_HOST = "localhost"
 DATABASE_PORT = "5432"
-DATABASE_USERNAME = "utest2"
-DATABASE_PASSWORD = "913SS@236"
-DATABASE_NAME = "djangobot"
+DATABASE_USERNAME = "jpeger_user"
+DATABASE_PASSWORD = "JpE34g487ER!"
+DATABASE_NAME = "jpeger"
 
-REDIS_HOST = "217.163.29.237"
-REDIS_PORT = "6379"
-REDIS_PASSWORD = "913sS@236"
