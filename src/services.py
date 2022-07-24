@@ -9,6 +9,10 @@ from urllib.parse import urlparse
 
 
 class ValidateUrl(AbstractValidateUrl):
+    """
+    Класс для проверки валидности URL и получения из него домена
+    """
+    # Паттерны URL
     template_url_http = re.compile(
         r'^(?:http|ftp)s?://'  # http:// or https://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
@@ -29,6 +33,10 @@ class ValidateUrl(AbstractValidateUrl):
     @info_log
     @exception
     def validate(self):
+        """
+        Проверка URl на совпадение с паттерном
+        :return:
+        """
         if re.match(ValidateUrl.template_url_http, self.url) is not None:
             return True
         elif re.match(ValidateUrl.template_url, self.url) is not None:
@@ -36,19 +44,38 @@ class ValidateUrl(AbstractValidateUrl):
             return True
         else:
             return False
+
     @info_log
     @exception
     def parse_url(self):
+        """
+        Парсинг домена из URL
+        :return:
+        """
         return urlparse(self.url).netloc
 
 
 class Shooter(AbstractShooter):
+    """
+    Класс для получения скрина и его сохранения
+    использует библиотеку pyppeteer для открытия браузера и получения изображения страницы
+    """
+
     def __init__(self, message):
         self.message = message
         self._error = False
 
     @info_log_message_async
     async def get_screen_and_save_page(self, message, url, domen):
+        """
+        Метод открывает браузер, настраивает параметры страницы, делает запрос по полученному URL,
+        сохраняет файл на диск, возвращает имя файла, путь, название страницы, время выполнения
+        В случае ошибки переводит self._error = True  и возвращает пустой результат
+        :param message:
+        :param url:
+        :param domen:
+        :return:
+        """
         starttime = time.time()
         browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
         # browser = await launch()
@@ -77,13 +104,19 @@ class Shooter(AbstractShooter):
 
 
 class Statistic:
-
+    """
+    Класс для обработки сырых данных статистики полученой из БД
+    """
     def __init__(self, db_worker):
         self.db_worker = db_worker
         pass
 
     @info_log
     def get_statistic_for_admin(self):
+        """
+        Метод возвращает строку с данными статистики работы бота
+        :return:
+        """
         count_requests, count_success_requests, count_not_success_requests, \
         top_domen, top_users, average_duration = self.db_worker.get_statistic()
         text_url = ''

@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
 
 
 class AbstractCore(ABC):
-    #
+    # Абстрактный класс Core
     @abstractmethod
     async def get_data(self, request):
         pass
@@ -16,6 +17,7 @@ class AbstractCore(ABC):
 
 
 class AbstractPostgresQL(ABC):
+    # Абстрактный класс БД
     @abstractmethod
     def set_statistic_succses_true(self, message, url, domen, file_name, file_path, duration):
         pass
@@ -30,12 +32,14 @@ class AbstractPostgresQL(ABC):
 
 
 class AbstractShooter(ABC):
+    # Абстрактный класс Shooter
     @abstractmethod
     async def get_screen_and_save_page(self, message, url, domen):
         pass
 
 
 class AbstractValidateUrl(ABC):
+    # Абстрактный класс ValidateUrl
     @abstractmethod
     def validate(self):
         pass

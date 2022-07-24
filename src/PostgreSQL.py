@@ -6,6 +6,9 @@ from abstract import AbstractPostgresQL
 
 
 class PostgreSQL(AbstractPostgresQL):
+    """
+    Класс для доступа в БД
+    """
     def __init__(self):
         self.connection = psycopg2.connect(user=DATABASE_USERNAME,
                                            password=DATABASE_PASSWORD,
@@ -17,6 +20,11 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def set_user_info_in_db(self, message):
+        """
+        Добавляет информацию о пользователе в БД
+        :param message:
+        :return:
+        """
         if message.chat.first_name:
             first_name = message.chat.first_name
         else:
@@ -34,6 +42,11 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def update_user_in_db(self, message):
+        """
+        Метод обновляет информацию о пользователе в БД
+        :param message:
+        :return:
+        """
         if message.chat.first_name:
             first_name = message.chat.first_name
         else:
@@ -46,6 +59,10 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log
     @exception
     def get_statistic(self):
+        """
+        Получение данных статистики из БД
+        :return:
+        """
         with self.connection:
             self.cursor.execute('SELECT COUNT(*) FROM request')
             count_requests = self.cursor.fetchall()
@@ -65,6 +82,16 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def set_statistic_succses_true(self, message, url, domen, file_name, file_path, duration):
+        """
+        Создание записи в таблицу статистики об удачном выполнении запроса
+        :param message:
+        :param url:
+        :param domen:
+        :param file_name:
+        :param file_path:
+        :param duration:
+        :return:
+        """
 
         with self.connection:
             try:
@@ -80,6 +107,17 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def set_statistic_succses_false(self, message, url, domen, file_name, file_path, duration):
+        """
+            Создание записи в таблицу статистики о неудачном выполнении запроса
+
+        :param message:
+        :param url:
+        :param domen:
+        :param file_name:
+        :param file_path:
+        :param duration:
+        :return:
+        """
         with self.connection:
             try:
                 self.cursor.execute(
@@ -94,6 +132,11 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log
     @exception
     def get_admin_chat_id(self):
+        """
+        Получаем ИД админ чата из БД
+        :return:
+        """
+
         with self.connection:
             self.cursor.execute('SELECT chat_id FROM admin_chat')
             chat_id = self.cursor.fetchall()
@@ -102,6 +145,11 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def set_admin_chat_in_db(self, message):
+        """
+        Запись ИД админ чата в БД
+        :param message:
+        :return:
+        """
         with self.connection:
             try:
                 self.cursor.execute(

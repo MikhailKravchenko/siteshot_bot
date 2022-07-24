@@ -2,7 +2,7 @@ FROM python:3.8
 
 RUN apt-get update && apt-get install -y --no-install-recommends vim htop
 RUN apt-get install -y python3-pip
-# Pyppeteer
+# Pyppeteer сразу скачиваем и устанавливаем, что бы не ждать при первом запросе и исключить связанные с этим ошибки
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
     google-chrome-stable \
     --no-install-recommends
 
-# It won't run from the root user.
 RUN groupadd chrome && useradd -g chrome -s /bin/bash -G audio,video chrome \
     && mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome
 COPY ./requirements.txt /src/requirements.txt
