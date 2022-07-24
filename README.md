@@ -13,6 +13,8 @@
 
 Установить переменные окружения:
 
+    src/env.py
+
 - для справки о webhook https://dvmn.org/encyclopedia/about-chatbots/webhook/
 
 webhook = True
