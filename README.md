@@ -9,7 +9,7 @@
 
 #Get Started:
 
-git@github.com:MikhailKravchenko/siteshot_bot.git
+    git@github.com:MikhailKravchenko/siteshot_bot.git
 
 Установить переменные окружения:
 
