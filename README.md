@@ -1,4 +1,4 @@
-# Jepeger bot for Telegram
+# Jpeger bot for Telegram
 Бот для создания веб-скриншотов.
 Чтобы получить скриншот - отправьте URL адрес сайта. 
 Например, wikipedia.org.
