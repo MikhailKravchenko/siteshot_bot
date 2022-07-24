@@ -1,6 +1,6 @@
 create table users
 (
-    user_id    int not null
+    user_id    integer not null
         constraint user_pk
             primary key,
     user_name  varchar(100),
@@ -8,6 +8,9 @@ create table users
     created_at timestamp default now(),
     update_at  timestamp default now()
 );
+
+alter table users
+    owner to jpeger_user;
 
 create table request
 (
@@ -28,15 +31,7 @@ create table request
 );
 
 alter table request
-    owner to sib5;
-
-create unique index request_request_id_uindex
-    on request (request_id);
-
-
-
-create unique index request_request_id_uindex
-    on request (request_id);
+    owner to jpeger_user;
 
 create table admin_chat
 (
@@ -54,6 +49,4 @@ create unique index admin_chat_admin_chat_id_uindex
 
 create unique index admin_chat_chat_id_uindex
     on admin_chat (chat_id);
-
-
 

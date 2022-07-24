@@ -129,7 +129,7 @@ class Core(AbstractCore):
         if admin_chat_id[0][0] == message.chat.id:
             await self.bot.send_message(message.chat.id,
                                         f'/statistic - Получить статистику работы бота \n'
-                                        f'/topusers - Топ пользователей по количеству запросов')
+                                        )
 
     @info_log_message_async
     @exception
