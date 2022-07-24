@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import telebot
+
 from decor import exception, info_log, info_log_message
 import psycopg2 as psycopg2
 from env import *
@@ -9,6 +11,7 @@ class PostgreSQL(AbstractPostgresQL):
     """
     Класс для доступа в БД
     """
+
     def __init__(self):
         self.connection = psycopg2.connect(user=DATABASE_USERNAME,
                                            password=DATABASE_PASSWORD,
@@ -19,7 +22,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def set_user_info_in_db(self, message):
+    def set_user_info_in_db(self, message: telebot.types.Message) -> bool:
         """
         Добавляет информацию о пользователе в БД
         :param message:
@@ -41,7 +44,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def update_user_in_db(self, message):
+    def update_user_in_db(self, message: telebot.types.Message) -> bool:
         """
         Метод обновляет информацию о пользователе в БД
         :param message:
@@ -55,6 +58,7 @@ class PostgreSQL(AbstractPostgresQL):
             self.cursor.execute(
                 "UPDATE users SET user_name = %s, first_name=%s WHERE user_id = %s",
                 (str(message.chat.username), str(first_name), str(message.chat.id)))
+        return True
 
     @info_log
     @exception
@@ -81,7 +85,8 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def set_statistic_succses_true(self, message, url, domen, file_name, file_path, duration):
+    def set_statistic_succses_true(self, message: telebot.types.Message, url: str, domen: str, file_name: str,
+                                   file_path: str, duration: float) -> bool:
         """
         Создание записи в таблицу статистики об удачном выполнении запроса
         :param message:
@@ -106,7 +111,8 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def set_statistic_succses_false(self, message, url, domen, file_name, file_path, duration):
+    def set_statistic_succses_false(self, message: telebot.types.Message, url: str, domen: str, file_name: None,
+                                    file_path: None, duration: None):
         """
             Создание записи в таблицу статистики о неудачном выполнении запроса
 
@@ -131,7 +137,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log
     @exception
-    def get_admin_chat_id(self):
+    def get_admin_chat_id(self) -> list:
         """
         Получаем ИД админ чата из БД
         :return:
@@ -144,7 +150,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def set_admin_chat_in_db(self, message):
+    def set_admin_chat_in_db(self, message: telebot.types.Message):
         """
         Запись ИД админ чата в БД
         :param message:

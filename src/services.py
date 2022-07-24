@@ -2,6 +2,8 @@
 import re
 import time
 from datetime import datetime
+
+import telebot
 from pyppeteer import launch
 from decor import exception, info_log, info_log_message_async
 from abstract import AbstractShooter, AbstractValidateUrl
@@ -32,7 +34,7 @@ class ValidateUrl(AbstractValidateUrl):
 
     @info_log
     @exception
-    def validate(self):
+    def validate(self) -> bool:
         """
         Проверка URl на совпадение с паттерном
         :return:
@@ -47,7 +49,7 @@ class ValidateUrl(AbstractValidateUrl):
 
     @info_log
     @exception
-    def parse_url(self):
+    def parse_url(self) -> str:
         """
         Парсинг домена из URL
         :return:
@@ -66,7 +68,7 @@ class Shooter(AbstractShooter):
         self._error = False
 
     @info_log_message_async
-    async def get_screen_and_save_page(self, message, url, domen):
+    async def get_screen_and_save_page(self, message: telebot.types.Message, url: str, domen: str):
         """
         Метод открывает браузер, настраивает параметры страницы, делает запрос по полученному URL,
         сохраняет файл на диск, возвращает имя файла, путь, название страницы, время выполнения
@@ -77,8 +79,8 @@ class Shooter(AbstractShooter):
         :return:
         """
         starttime = time.time()
-        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-        # browser = await launch()
+        # browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        browser = await launch()
 
         page = await browser.newPage()
 
@@ -107,12 +109,13 @@ class Statistic:
     """
     Класс для обработки сырых данных статистики полученой из БД
     """
+
     def __init__(self, db_worker):
         self.db_worker = db_worker
         pass
 
     @info_log
-    def get_statistic_for_admin(self):
+    def get_statistic_for_admin(self) -> str:
         """
         Метод возвращает строку с данными статистики работы бота
         :return:

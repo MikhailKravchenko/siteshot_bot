@@ -56,7 +56,7 @@ class Core(AbstractCore):
 
         @self.bot.message_handler(func=lambda message: True, content_types=['text'])
         @exception
-        async def _check_text_and_get_screen(message):
+        async def _check_text_and_get_screen(message: telebot.types.Message):
             """Срабатывает при получении любых текстовых сообщений"""
 
             await self.process_check_text_and_get_screen(message)
@@ -92,7 +92,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_comand_start(self, message):
+    async def process_comand_start(self, message: telebot.types.Message):
         """Метод команды /start
             Проверяет есть ли такой пользователь в БД, если нет то добавляет, если есть то ообновляет информацию о нем.
             Посылает приветственное инф сообщение
@@ -108,7 +108,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_comand_admin(self, message):
+    async def process_comand_admin(self, message: telebot.types.Message):
         """
 
         :param message: telebot.types.Message
@@ -134,7 +134,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_set_admin_chat(self, message):
+    async def process_set_admin_chat(self, message: telebot.types.Message):
         """
         Назначает текущий чат чатом администратора, если он не назначен
         """
@@ -151,7 +151,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_get_statistic(self, message):
+    async def process_get_statistic(self, message: telebot.types.Message):
         """
 
         :param message: telebot.types.Message
@@ -167,7 +167,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_check_text_and_get_screen(self, message):
+    async def process_check_text_and_get_screen(self, message: telebot.types.Message):
         """
 
         :param message: telebot.types.Message
