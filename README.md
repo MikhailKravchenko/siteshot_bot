@@ -23,8 +23,8 @@
 Для запуска понадобится сформировать докер контейнеры и запустить их. 
 Если на сервере не установлен Docker, то самое время его установить:
 
-    https://docs.docker.com/desktop/install/ubuntu/
-    https://docs.docker.com/compose/install/compose-plugin/#installing-compose-on-linux-systems
+https://docs.docker.com/engine/install/ubuntu/
+https://docs.docker.com/compose/install/compose-plugin/#installing-compose-on-linux-systems
 Клонировать репозиторий в удобное место:
 
     git@github.com:MikhailKravchenko/siteshot_bot.git
