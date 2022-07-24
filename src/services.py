@@ -78,8 +78,8 @@ class Shooter(AbstractShooter):
         :return:
         """
         starttime = time.time()
-        # browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
-        browser = await launch()
+        browser = await launch(executablePath='/usr/bin/google-chrome-stable', headless=True, args=['--no-sandbox'])
+        # browser = await launch()
 
         page = await browser.newPage()
 
