@@ -56,6 +56,7 @@ class Shooter(AbstractShooter):
         page = await browser.newPage()
 
         await page.setViewport({"width": 1200, "height": 1000})
+
         try:
             await page.goto(url)
         except:
@@ -80,9 +81,10 @@ class Statistic:
     def __init__(self, db_worker):
         self.db_worker = db_worker
         pass
+
     @info_log
     def get_statistic_for_admin(self):
-        count_requests, count_success_requests, count_not_success_requests,\
+        count_requests, count_success_requests, count_not_success_requests, \
         top_domen, top_users, average_duration = self.db_worker.get_statistic()
         text_url = ''
         for i, domen in enumerate(top_domen):

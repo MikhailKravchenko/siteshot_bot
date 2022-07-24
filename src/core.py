@@ -162,11 +162,11 @@ class Core(AbstractCore):
                 markup.add(button)
                 await self.bot.send_photo(message.chat.id, file, caption=f'{title} \n'
                                                                          f'\n'
-                                                                         f'*Веб-сайт*: {validation_url.url} \n'
+                                                                         f'<b>Веб-сайт:</b> {validation_url.url} \n'
                                                                          f'\n'
-                                                                         f'*Время обработки*: {int(duration)} секунд',
+                                                                         f'<b>Время обработки</b>: {int(duration)} секунд',
                                           reply_markup=markup,
-                                          parse_mode="Markdown")
+                                          parse_mode='HTML')
 
             await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
             db_worker.set_statistic_succses_true(message, validation_url.url, domen, filename, file_path, duration)
