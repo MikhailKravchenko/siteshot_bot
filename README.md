@@ -53,3 +53,7 @@ webhook = False
  Собираем образы:
 
     docker-compose -f docker-compose.yml up -d --build
+
+# Information
+История разработки:
+https://github.com/users/MikhailKravchenko/projects/1
