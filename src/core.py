@@ -159,11 +159,12 @@ class Core(AbstractCore):
         Запрашивает статистику и предает ее пользователю
         """
         db_worker = PostgreSQL()
-
-        statistic = Statistic(db_worker)
-        get_statistic = statistic.get_statistic_for_admin()
-        await self.bot.send_message(message.chat.id, get_statistic)
-
+        try:
+            statistic = Statistic(db_worker)
+            get_statistic = statistic.get_statistic_for_admin()
+            await self.bot.send_message(message.chat.id, get_statistic)
+        except TypeError:
+            await self.bot.send_message(message.chat.id, 'Статистика пуста')
     @info_log_message_async
     @exception
     async def process_check_text_and_get_screen(self, message: telebot.types.Message):
