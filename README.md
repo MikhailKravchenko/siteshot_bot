@@ -6,7 +6,7 @@
 • С помощью бота вы можете проверять подозрительные ссылки. (Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)
 
 • Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, которые отправляют пользователи
-#Instruction
+#Documentation
 Полезные команды:
 
     /start - Приветствие
@@ -17,6 +17,12 @@
 
 #Get Started:
 
+Для запуска понадобится сформировать докер контейнеры и запустить их. 
+Если на сервере не установлен Docker, то самое время его установить:
+
+    https://docs.docker.com/desktop/install/ubuntu/
+    https://docs.docker.com/compose/install/compose-plugin/#installing-compose-on-linux-systems
+Клонировать репозиторий в удобное место:
     git@github.com:MikhailKravchenko/siteshot_bot.git
 
 Установить переменные окружения:
