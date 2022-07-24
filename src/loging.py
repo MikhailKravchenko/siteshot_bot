@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 import logging.config
 import logging
 from pythonjsonlogger import jsonlogger
 
 
 """
-งฏงังใงไงโงเงÛงÜงั logger  งฺ งๆงเงโงÞงังไงั งใงเงเงาง๋งึง฿งฺงÛ งีงÝง๑ งÝงเงิงั JSON. งฃงใงึ งูงังแงโงัง๊งฺงำงังึงไงใง๑ งฺงู งๆงังÛงÝงั งÜงเงๆงฺงิงๅงโงัง่งฺงฺ logging-json.ini
+ะะฐััั€ะพะนะบะฐ logger  ะธ ัะพั€ะผะฐัะฐ ัะพะพะฑัะตะฝะธะน ะดะปั ะปะพะณะฐ JSON. ะ’ัะต ะทะฐะฟั€ะฐัะธะฒะฐะตััั ะธะท ัะฐะนะปะฐ ะบะพัะธะณัั€ะฐัะธะธ logging-json.ini
 """
 logger = logging.getLogger(__name__)
 logHandler = logging.StreamHandler()
