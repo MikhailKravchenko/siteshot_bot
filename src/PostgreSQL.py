@@ -57,9 +57,10 @@ class PostgreSQL(AbstractPostgresQL):
             top_domen = self.cursor.fetchall()
             self.cursor.execute(
                 'SELECT  request.user_id,users.user_name, users.first_name,  COUNT(*)  FROM request  JOIN users ON request.user_id = users.user_id group by request.user_id, users.user_name, users.first_name ORDER BY COUNT DESC  LIMIT 10')
-
             top_users = self.cursor.fetchall()
-            return count_requests, count_success_requests, count_not_success_requests, top_domen, top_users
+            self.cursor.execute('SELECT AvG(duration) AS durAvg FROM request')
+            average_duration = self.cursor.fetchall()
+            return count_requests, count_success_requests, count_not_success_requests, top_domen, top_users, average_duration
 
     @info_log_message
     @exception

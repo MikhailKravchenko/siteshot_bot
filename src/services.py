@@ -82,7 +82,8 @@ class Statistic:
         pass
     @info_log
     def get_statistic_for_admin(self):
-        count_requests, count_success_requests, count_not_success_requests, top_domen, top_users = self.db_worker.get_statistic()
+        count_requests, count_success_requests, count_not_success_requests,\
+        top_domen, top_users, average_duration = self.db_worker.get_statistic()
         text_url = ''
         for i, domen in enumerate(top_domen):
             text_url += f'{i + 1}. {domen[0]} количество запросов {domen[1]}\n'
@@ -92,10 +93,10 @@ class Statistic:
             text_users += f'{i + 1}. ID: {user[0]}, username: {"отсутствует" if user[1] is None else user[1]},' \
                           f' first_name: {"отсутствует" if user[2] is None else user[2]},' \
                           f' количество запросов {user[3]}\n'
-        text = f'Количество запросов за все время: {count_requests[0][0]}\n' \
-               f'Удачных запросов: {count_success_requests[0][0]}\n' \
-               f'Неудачных запросов: {count_not_success_requests[0][0]}\n' \
-               f'Топ URL: \n{text_url}\n' \
-               f'Топ пользователей:\n{text_users} '
-
+        text = f'Количество запросов за все время: {count_requests[0][0]}\n\n' \
+               f'Удачных запросов: {count_success_requests[0][0]}\n\n' \
+               f'Неудачных запросов: {count_not_success_requests[0][0]}\n\n' \
+               f'Топ URL: \n{text_url}\n\n' \
+               f'Топ пользователей:\n{text_users}\n' \
+               f'Среднее время выполнения запроса: {"%.4f" % average_duration[0][0]} сек.'
         return text
