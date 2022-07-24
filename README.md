@@ -11,7 +11,7 @@
 
 git@github.com:MikhailKravchenko/siteshot_bot.git
 
-Утановить переменные окружения:
+Установить переменные окружения:
 
 - для справки о webhook https://dvmn.org/encyclopedia/about-chatbots/webhook/
 
