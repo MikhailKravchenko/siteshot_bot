@@ -58,7 +58,6 @@ class Core(AbstractCore):
         @exception
         async def _check_text_and_get_screen(message: telebot.types.Message):
             """Срабатывает при получении любых текстовых сообщений"""
-
             await self.process_check_text_and_get_screen(message)
 
         @self.bot.callback_query_handler(func=lambda c: True)
@@ -191,7 +190,7 @@ class Core(AbstractCore):
             send_message = await self.bot.send_message(message.chat.id,
                                                        u'\U000026A1' + '️_Запрос отправлен на сайт..._',
                                                        reply_to_message_id=message.message_id, parse_mode="Markdown")
-            shooter = Shooter(message)
+            shooter = Shooter()
             # Получение Скрина и сопутсвуещей информации: имя файла, путь, Название страницы, время выполнения
             filename, file_path, title, duration = await shooter.get_screen_and_save_page(message, validation_url.url,
                                                                                           domen)

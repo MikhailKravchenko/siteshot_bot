@@ -63,8 +63,7 @@ class Shooter(AbstractShooter):
     использует библиотеку pyppeteer для открытия браузера и получения изображения страницы
     """
 
-    def __init__(self, message):
-        self.message = message
+    def __init__(self):
         self._error = False
 
     @info_log_message_async

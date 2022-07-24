@@ -7,12 +7,12 @@ from datetime import datetime
 
 def create_logger():
     """
-    ����٧էѧ֧� logger �� �ӧ�٧ӧ�ѧ�ѧ֧� �֧ԧ�
+    Создаем logger и возвращаем его
     """
     logger = logging.getLogger("example_logger")
     logger.setLevel(logging.INFO)
 
-    # create the logging file handler
+    # Файл для логов
     fh = logging.FileHandler("/src/log/siteshot_worklog.log")
 
     format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -25,7 +25,7 @@ def create_logger():
 
 def exception(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ڧ�ܧݧ��֧ߧڧ�
+    Декоратор для логирования исключений
     """
 
     @functools.wraps(function)
@@ -47,7 +47,7 @@ def exception(function):
 
 def info_log(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ӧ�֧ާ֧ߧ� ��ѧҧ��� ��ҧ���ߧ��� ���ߧܧ�ڧ� �� �ާ֧��է��
+    Декоратор для логирования времени работы обычных функций и методов
     """
 
     def wrapper(*args, **kwargs):
@@ -64,7 +64,7 @@ def info_log(function):
 
 def info_log_message(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ӧ�֧ާ֧ߧ� ��ѧҧ��� ��ҧ���ߧ��� ���ߧܧ�ڧ� �� �ާ֧��է�� �� �ܧ������ �֧��� message: telebot.types.Message
+    Декоратор для логирования времени работы обычных функций и методов в котрых есть message: telebot.types.Message
     """
 
     def wrapper(*args, **kwargs):
@@ -89,7 +89,7 @@ def info_log_message(function):
 
 def info_log_async(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ӧ�֧ާ֧ߧ� ��ѧҧ��� �ѧ�ڧߧ���ߧߧ��� ���ߧܧ�ڧ� �� �ާ֧��է��
+    Декоратор для логирования времени работы асинхронных функций и методов
     """
 
     async def wrapper(*args, **kwargs):
@@ -106,7 +106,7 @@ def info_log_async(function):
 
 def info_log_message_async(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ӧ�֧ާ֧ߧ� ��ѧҧ��� �ѧ�ڧߧ���ߧߧ��� ���ߧܧ�ڧ� �� �ާ֧��է�� �� �ܧ������ �֧��� message: telebot.types.Message
+    Декоратор для логирования времени работы асинхронных функций и методов в котрых есть message: telebot.types.Message
     """
     async def wrapper(*args, **kwargs):
         starttime = time.time()
@@ -130,7 +130,7 @@ def info_log_message_async(function):
 
 def info_log_message_async_callback(function):
     """
-    ���֧ܧ��ѧ��� �էݧ� �ݧ�ԧڧ��ӧѧߧڧ� �ӧ�֧ާ֧ߧ� ��ѧҧ��� �ѧ�ڧߧ���ߧߧ��� ���ߧܧ�ڧ� �� �ާ֧��է�� �� �ܧ������ �֧��� telebot.types.CallbackQuery
+    Декоратор для логирования времени работы асинхронных функций и методов в котрых есть telebot.types.CallbackQuery
     """
     async def wrapper(*args, **kwargs):
         starttime = time.time()
