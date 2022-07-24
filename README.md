@@ -23,6 +23,7 @@
     https://docs.docker.com/desktop/install/ubuntu/
     https://docs.docker.com/compose/install/compose-plugin/#installing-compose-on-linux-systems
 Клонировать репозиторий в удобное место:
+
     git@github.com:MikhailKravchenko/siteshot_bot.git
 
 Установить переменные окружения:

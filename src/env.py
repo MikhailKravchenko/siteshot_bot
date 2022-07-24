@@ -1,4 +1,4 @@
-token = ''
+token = '885507314:AAE2iVUAjAkoZ8M5jIIuopf6bIx6FsqwUHY'
 webhook = False
 WEBHOOK_HOST = '0.0.0.0'
 WEBHOOK_PORT = 443  # 443, 80, 88 or 8443 (port need to be 'open')
