@@ -14,7 +14,7 @@ from decor import exception, info_log, info_log_message_async
 
 class ValidateUrl(AbstractValidateUrl):
     """
-    Класс для проверки валидности URL и получения из него домена
+    Class for checking the validity of the URL and getting the domain from it
     """
     # Паттерны URL
     template_url_http = re.compile(
@@ -38,7 +38,7 @@ class ValidateUrl(AbstractValidateUrl):
     @exception
     def validate(self) -> bool:
         """
-        Проверка URl на совпадение с паттерном
+        Checking URl for a match with a pattern
         :return:
         """
         if re.match(ValidateUrl.template_url_http, self.url) is not None:
@@ -53,7 +53,7 @@ class ValidateUrl(AbstractValidateUrl):
     @exception
     def parse_url(self) -> str:
         """
-        Парсинг домена из URL
+        Parsing a domain from a URL
         :return:
         """
         return urlparse(self.url).netloc
@@ -61,8 +61,8 @@ class ValidateUrl(AbstractValidateUrl):
 
 class Shooter(AbstractShooter):
     """
-    Класс для получения скрина и его сохранения
-    использует библиотеку pyppeteer для открытия браузера и получения изображения страницы
+    Class for getting a screenshot and saving it
+     uses the pyppeteer library to open the browser and get the page image
     """
 
     def __init__(self) -> None:
@@ -72,9 +72,9 @@ class Shooter(AbstractShooter):
     async def get_screen_and_save_page(self, message: telebot.types.Message, url: str, domen: str) -> \
             Union[Tuple[None, None, None, None], Tuple[str, str, str, float]]:
         """
-        Метод открывает браузер, настраивает параметры страницы, делает запрос по полученному URL,
-        сохраняет файл на диск, возвращает имя файла, путь, название страницы, время выполнения
-        В случае ошибки переводит self._error = True  и возвращает пустой результат
+        The method opens the browser, configures the page settings, makes a request to the received URL,
+         saves file to disk, returns filename, path, page title, runtime
+         In case of an error, translates self._error = True and returns an empty result
         :param message:
         :param url:
         :param domen:
@@ -109,7 +109,7 @@ class Shooter(AbstractShooter):
 
 class Statistic:
     """
-    Класс для обработки сырых данных статистики полученой из БД
+   Class for processing raw statistics data obtained from the database
     """
 
     def __init__(self, db_worker: object) -> None:
@@ -118,24 +118,24 @@ class Statistic:
     @info_log
     def get_statistic_for_admin(self) -> str:
         """
-        Метод возвращает строку с данными статистики работы бота
+        The method returns a string with bot statistics data
         :return:
         """
         count_requests, count_success_requests, count_not_success_requests, \
         top_domen, top_users, average_duration = self.db_worker.get_statistic()
         text_url = ''
         for i, domen in enumerate(top_domen):
-            text_url += f'{i + 1}. {domen[0]} количество запросов {domen[1]}\n'
+            text_url += f'{i + 1}. {domen[0]} number of requests {domen[1]}\n'
 
         text_users = ''
         for i, user in enumerate(top_users):
-            text_users += f'{i + 1}. ID: {user[0]}, username: {"отсутствует" if user[1] is None else user[1]},' \
-                          f' first_name: {"отсутствует" if user[2] is None else user[2]},' \
-                          f' количество запросов {user[3]}\n'
-        text = f'Количество запросов за все время: {count_requests[0][0]}\n\n' \
-               f'Удачных запросов: {count_success_requests[0][0]}\n\n' \
-               f'Неудачных запросов: {count_not_success_requests[0][0]}\n\n' \
-               f'Топ URL: \n{text_url}\n\n' \
-               f'Топ пользователей:\n{text_users}\n' \
-               f'Среднее время выполнения запроса: {"%.4f" % average_duration[0][0]} сек.'
+            text_users += f'{i + 1}. ID: {user[0]}, username: {"None" if user[1] is None else user[1]},' \
+                          f' first_name: {"None" if user[2] is None else user[2]},' \
+                          f' number of requests {user[3]}\n'
+        text = f'Number of requests for all time: {count_requests[0][0]}\n\n' \
+               f'Successful Requests: {count_success_requests[0][0]}\n\n' \
+               f'Failed Requests: {count_not_success_requests[0][0]}\n\n' \
+               f'Top URL: \n{text_url}\n\n' \
+               f'Top users:\n{text_users}\n' \
+               f'Average query execution time in seconds: {"%.4f" % average_duration[0][0]}'
         return text

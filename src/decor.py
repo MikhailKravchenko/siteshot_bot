@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, Tuple
 
 def create_logger() -> object:
     """
-    Создаем logger и возвращаем его
+    Create a logger and return it
     """
     logger = logging.getLogger("example_logger")
     logger.setLevel(logging.INFO)
@@ -26,7 +26,7 @@ def create_logger() -> object:
 
 def exception(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования исключений
+    Decorator for logging exceptions
     """
 
     @functools.wraps(function)
@@ -48,7 +48,7 @@ def exception(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]],
 
 def info_log(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования времени работы обычных функций и методов
+    Decorator for logging the running time of regular functions and methods
     """
 
     def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
@@ -65,7 +65,8 @@ def info_log(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], 
 
 def info_log_message(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования времени работы обычных функций и методов в котрых есть message: telebot.types.Message
+    Decorator for logging the operation time of ordinary functions and methods
+     in which there is a message: telebot.types.Message
     """
 
     def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
@@ -91,7 +92,7 @@ def info_log_message(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str,
 
 def info_log_async(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования времени работы асинхронных функций и методов
+    Decorator for logging the running time of asynchronous functions and methods
     """
 
     async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
@@ -108,7 +109,8 @@ def info_log_async(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, A
 
 def info_log_message_async(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования времени работы асинхронных функций и методов в котрых есть message: telebot.types.Message
+    Decorator for logging the running time of asynchronous functions and methods
+    in which there is a message: telebot.types.Message
     """
 
     async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
@@ -134,7 +136,7 @@ def info_log_message_async(function: Callable) -> Callable[[Tuple[Any, ...], Dic
 
 def info_log_message_async_callback(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
-    Декоратор для логирования времени работы асинхронных функций и методов в котрых есть telebot.types.CallbackQuery
+    Decorator for logging the running time of asynchronous functions and methods that have telebot.types.CallbackQuery
     """
 
     async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:

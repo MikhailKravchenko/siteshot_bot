@@ -19,5 +19,5 @@ ignore =
     DJ01,
     A003,
 per-file-ignores =
-    */views.py:ANN201
+    */abstract.py:ANN201,ANN001
     */config.py:F401,F811

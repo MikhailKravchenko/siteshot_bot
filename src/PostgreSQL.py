@@ -15,7 +15,7 @@ from env import (
 
 class PostgreSQL(AbstractPostgresQL):
     """
-    Класс для доступа в БД
+    Class for accessing the database
     """
 
     def __init__(self) -> None:
@@ -30,7 +30,7 @@ class PostgreSQL(AbstractPostgresQL):
     @exception
     def set_user_info_in_db(self, message: telebot.types.Message) -> bool:
         """
-        Добавляет информацию о пользователе в БД
+        Adds information about the user to the database
         :param message:
         :return:
         """
@@ -52,7 +52,7 @@ class PostgreSQL(AbstractPostgresQL):
     @exception
     def update_user_in_db(self, message: telebot.types.Message) -> bool:
         """
-        Метод обновляет информацию о пользователе в БД
+        The method updates information about the user in the database
         :param message:
         :return:
         """
@@ -70,7 +70,7 @@ class PostgreSQL(AbstractPostgresQL):
     @exception
     def get_statistic(self) -> list:
         """
-        Получение данных статистики из БД
+        Getting statistics data from the database
         :return:
         """
         with self.connection:
@@ -94,7 +94,7 @@ class PostgreSQL(AbstractPostgresQL):
     def set_statistic_succses_true(self, message: telebot.types.Message, url: str, domen: str, file_name: str,
                                    file_path: str, duration: float) -> bool:
         """
-        Создание записи в таблицу статистики об удачном выполнении запроса
+        Creating an entry in the statistics table about the successful execution of the query
         :param message:
         :param url:
         :param domen:
@@ -120,7 +120,7 @@ class PostgreSQL(AbstractPostgresQL):
     def set_statistic_succses_false(self, message: telebot.types.Message, url: str, domen: str, file_name: None,
                                     file_path: None, duration: None) -> bool:
         """
-            Создание записи в таблицу статистики о неудачном выполнении запроса
+            Creating an entry in the statistics table about a failed query execution
 
         :param message:
         :param url:
@@ -145,7 +145,7 @@ class PostgreSQL(AbstractPostgresQL):
     @exception
     def get_admin_chat_id(self) -> list:
         """
-        Получаем ИД админ чата из БД
+        Get admin chat ID from database
         :return:
         """
 
@@ -158,7 +158,7 @@ class PostgreSQL(AbstractPostgresQL):
     @exception
     def set_admin_chat_in_db(self, message: telebot.types.Message) -> bool:
         """
-        Запись ИД админ чата в БД
+        Write Admin Chat ID to DB
         :param message:
         :return:
         """

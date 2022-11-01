@@ -2,7 +2,7 @@ FROM python:3.8
 
 RUN apt-get update && apt-get install -y --no-install-recommends vim htop
 RUN apt-get install -y python3-pip
-# Pyppeteer сразу скачиваем и устанавливаем, что бы не ждать при первом запросе и исключить связанные с этим ошибки
+# Download and install Pyppeteer immediately, so as not to wait at the first request and eliminate errors associated with this
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \

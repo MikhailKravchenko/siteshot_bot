@@ -5,7 +5,7 @@ import logging.config
 from pythonjsonlogger import jsonlogger
 
 """
-Настройка logger  и формата сообщений для лога JSON. Все запрашивается из файла кофигурации logging-json.ini
+Setting logger and message format for JSON log. Everything is requested from the configuration file logging-json.ini
 """
 logger = logging.getLogger(__name__)
 log_handler = logging.StreamHandler()
