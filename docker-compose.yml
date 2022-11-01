@@ -6,7 +6,7 @@ services:
     build: ./src/
     container_name: bot
     volumes:
-      - ./src/storage:/src/storage
+      - ./src:/src
       - ./src/log:/src/log
     restart: always
 

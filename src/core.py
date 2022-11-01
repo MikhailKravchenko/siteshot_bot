@@ -5,7 +5,6 @@ import urllib
 import ssl
 import telebot
 
-
 from abstract import AbstractCore
 from loging import logging
 from services import Shooter, ValidateUrl, Statistic
@@ -64,7 +63,7 @@ class Core(AbstractCore):
         @self.bot.callback_query_handler(func=lambda c: True)
         @exception
         @info_log_message_async_callback
-        async def process_callback_btn(callback_query: types.CallbackQuery):
+        async def process_callback_btn(callback_query: types.CallbackQuery, info: dict):
             """Срабатывает при нажатии на кнопку Подробнее.
                 Запрашивает необходимые данные о сайте с free API одного из WHOIS сервисов
                 и выдает полученную информацию пользователю
@@ -169,6 +168,7 @@ class Core(AbstractCore):
             await self.bot.send_message(message.chat.id, get_statistic)
         except TypeError:
             await self.bot.send_message(message.chat.id, 'Статистика пуста')
+
     @info_log_message_async
     @exception
     async def process_check_text_and_get_screen(self, message: telebot.types.Message):
