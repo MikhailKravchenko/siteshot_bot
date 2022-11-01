@@ -2,12 +2,14 @@
 import re
 import time
 from datetime import datetime
+from typing import Tuple, Union
 from urllib.parse import urlparse
+
 import telebot
 from pyppeteer import launch
-from decor import exception, info_log, info_log_message_async
-from abstract import AbstractShooter, AbstractValidateUrl
 
+from abstract import AbstractShooter, AbstractValidateUrl
+from decor import exception, info_log, info_log_message_async
 
 
 class ValidateUrl(AbstractValidateUrl):
@@ -29,7 +31,7 @@ class ValidateUrl(AbstractValidateUrl):
         r'(?::\d+)?'  # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
-    def __init__(self, url):
+    def __init__(self, url: str) -> None:
         self.url = url
 
     @info_log
@@ -63,11 +65,12 @@ class Shooter(AbstractShooter):
     использует библиотеку pyppeteer для открытия браузера и получения изображения страницы
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._error = False
 
     @info_log_message_async
-    async def get_screen_and_save_page(self, message: telebot.types.Message, url: str, domen: str):
+    async def get_screen_and_save_page(self, message: telebot.types.Message, url: str, domen: str) -> \
+            Union[Tuple[None, None, None, None], Tuple[str, str, str, float]]:
         """
         Метод открывает браузер, настраивает параметры страницы, делает запрос по полученному URL,
         сохраняет файл на диск, возвращает имя файла, путь, название страницы, время выполнения
@@ -87,14 +90,14 @@ class Shooter(AbstractShooter):
 
         try:
             await page.goto(url)
-        except:
+        except BaseException:
             self._error = True
             return None, None, None, None
         filename = f'{datetime.utcfromtimestamp(message.date).strftime("%Y_%m_%d_%H_%M_%S")}_{message.chat.id}_{domen.replace(".", "_")}.png'
         file_path = 'storage/' + filename
         try:
             await page.screenshot({'path': file_path, })
-        except:
+        except BaseException:
             self._error = True
             return None, None, None, None
         title = await page.title()
@@ -109,9 +112,8 @@ class Statistic:
     Класс для обработки сырых данных статистики полученой из БД
     """
 
-    def __init__(self, db_worker):
+    def __init__(self, db_worker: object) -> None:
         self.db_worker = db_worker
-
 
     @info_log
     def get_statistic_for_admin(self) -> str:

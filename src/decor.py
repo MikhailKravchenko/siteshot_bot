@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import asyncio
 import functools
 import logging
 import time
 from datetime import datetime
+from typing import Any, Callable, Dict, Tuple
 
 
-def create_logger():
+def create_logger() -> object:
     """
     Создаем logger и возвращаем его
     """
@@ -16,25 +16,25 @@ def create_logger():
     # Файл для логов
     fh = logging.FileHandler("/src/log/siteshot_worklog.log")
 
-    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(format)
+    format_message: str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(format_message)
     fh.setFormatter(formatter)
 
     logger.addHandler(fh)
     return logger
 
 
-def exception(function):
+def exception(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования исключений
     """
 
     @functools.wraps(function)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         logger = create_logger()
         try:
             return function(*args, **kwargs)
-        except:
+        except BaseException:
             # log the exception
             err = "There was an exception in  "
             err += function.__name__
@@ -46,12 +46,12 @@ def exception(function):
     return wrapper
 
 
-def info_log(function):
+def info_log(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования времени работы обычных функций и методов
     """
 
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         starttime = time.time()
         res = function(*args, **kwargs)
         endtime = time.time()
@@ -63,12 +63,12 @@ def info_log(function):
     return wrapper
 
 
-def info_log_message(function):
+def info_log_message(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования времени работы обычных функций и методов в котрых есть message: telebot.types.Message
     """
 
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         starttime = time.time()
         if args[1].chat.first_name:
             first_name = args[1].chat.first_name
@@ -77,23 +77,24 @@ def info_log_message(function):
         res = function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        log_dict = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
-             'first_name': str(first_name),
-             'text': str(args[1].text),
-             'time_answer':
-                 str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
+        log_dict = {'facility': function.__name__, "run_duration": float(duration),
+                    'user.id': str(args[1].from_user.id),
+                    'first_name': str(first_name),
+                    'text': str(args[1].text),
+                    'time_answer':
+                        str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
         logging.info('System log', extra=log_dict)
         return res
 
     return wrapper
 
 
-def info_log_async(function):
+def info_log_async(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования времени работы асинхронных функций и методов
     """
 
-    async def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         starttime = time.time()
         res = await function(*args, **kwargs)
         endtime = time.time()
@@ -105,11 +106,12 @@ def info_log_async(function):
     return wrapper
 
 
-def info_log_message_async(function):
+def info_log_message_async(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования времени работы асинхронных функций и методов в котрых есть message: telebot.types.Message
     """
-    async def wrapper(*args, **kwargs):
+
+    async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         starttime = time.time()
         if args[1].chat.first_name:
             first_name = args[1].chat.first_name
@@ -118,22 +120,24 @@ def info_log_message_async(function):
         res = await function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        log_dict = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
-             'first_name': str(first_name),
-             'text': str(args[1].text),
-             'time_answer':
-                 str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
+        log_dict = {'facility': function.__name__, "run_duration": float(duration),
+                    'user.id': str(args[1].from_user.id),
+                    'first_name': str(first_name),
+                    'text': str(args[1].text),
+                    'time_answer':
+                        str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
         logging.info('System log', extra=log_dict)
         return res
 
     return wrapper
 
 
-def info_log_message_async_callback(function):
+def info_log_message_async_callback(function: Callable) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
     """
     Декоратор для логирования времени работы асинхронных функций и методов в котрых есть telebot.types.CallbackQuery
     """
-    async def wrapper(*args, **kwargs):
+
+    async def wrapper(*args, **kwargs) -> Callable[[Tuple[Any, ...], Dict[str, Any]], Any]:
         starttime = time.time()
         if args[0].message.chat.first_name:
             first_name = args[0].message.chat.first_name
@@ -143,10 +147,10 @@ def info_log_message_async_callback(function):
         endtime = time.time()
         duration = endtime - starttime
         log_dict = {'facility': function.__name__, "run_duration": float(duration),
-             'user.id': str(args[0].message.from_user.id), 'first_name': str(first_name),
-             'text': str(args[0].message.text),
-             'time_answer':
-                 str(datetime.utcfromtimestamp(args[0].message.date).strftime('%Y-%m-%d %H:%M:%S'))}
+                    'user.id': str(args[0].message.from_user.id), 'first_name': str(first_name),
+                    'text': str(args[0].message.text),
+                    'time_answer':
+                        str(datetime.utcfromtimestamp(args[0].message.date).strftime('%Y-%m-%d %H:%M:%S'))}
         logging.info('System log', extra=log_dict)
         return res
 

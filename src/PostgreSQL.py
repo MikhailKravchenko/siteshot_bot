@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+import psycopg2 as psycopg2
 import telebot
 
-from decor import exception, info_log, info_log_message
-import psycopg2 as psycopg2
-from env import *
 from abstract import AbstractPostgresQL
+from decor import exception, info_log, info_log_message
+from env import (
+    DATABASE_HOST,
+    DATABASE_NAME,
+    DATABASE_PASSWORD,
+    DATABASE_PORT,
+    DATABASE_USERNAME,
+)
 
 
 class PostgreSQL(AbstractPostgresQL):
@@ -12,7 +18,7 @@ class PostgreSQL(AbstractPostgresQL):
     Класс для доступа в БД
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.connection = psycopg2.connect(user=DATABASE_USERNAME,
                                            password=DATABASE_PASSWORD,
                                            host=DATABASE_HOST,
@@ -62,7 +68,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log
     @exception
-    def get_statistic(self):
+    def get_statistic(self) -> list:
         """
         Получение данных статистики из БД
         :return:
@@ -112,7 +118,7 @@ class PostgreSQL(AbstractPostgresQL):
     @info_log_message
     @exception
     def set_statistic_succses_false(self, message: telebot.types.Message, url: str, domen: str, file_name: None,
-                                    file_path: None, duration: None):
+                                    file_path: None, duration: None) -> bool:
         """
             Создание записи в таблицу статистики о неудачном выполнении запроса
 
@@ -150,7 +156,7 @@ class PostgreSQL(AbstractPostgresQL):
 
     @info_log_message
     @exception
-    def set_admin_chat_in_db(self, message: telebot.types.Message):
+    def set_admin_chat_in_db(self, message: telebot.types.Message) -> bool:
         """
         Запись ИД админ чата в БД
         :param message:

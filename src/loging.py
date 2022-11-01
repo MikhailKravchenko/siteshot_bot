@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-import logging.config
 import logging
-from pythonjsonlogger import jsonlogger
+import logging.config
 
+from pythonjsonlogger import jsonlogger
 
 """
 Настройка logger  и формата сообщений для лога JSON. Все запрашивается из файла кофигурации logging-json.ini
 """
 logger = logging.getLogger(__name__)
-logHandler = logging.StreamHandler()
+log_handler = logging.StreamHandler()
 formatter = jsonlogger.JsonFormatter()
-logHandler.setFormatter(formatter)
-logger.addHandler(logHandler)
+log_handler.setFormatter(formatter)
+logger.addHandler(log_handler)
 answerlog = logging.config.fileConfig('/src/logging-json.ini', disable_existing_loggers=False)

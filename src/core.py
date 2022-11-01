@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import json
-import urllib
 import ssl
+import urllib
+
 import telebot
+from aiohttp import web
+from telebot import types
+from telebot.async_telebot import AsyncTeleBot
 
 from abstract import AbstractCore
-from loging import logging
-from services import Shooter, ValidateUrl, Statistic
-from env import *
-from aiohttp import web
-from telebot.async_telebot import AsyncTeleBot
-from telebot import types
 from decor import exception, info_log_message_async, info_log_message_async_callback
-
+from env import (
+    WEBHOOK_LISTEN,
+    WEBHOOK_PORT,
+    WEBHOOK_SSL_CERT,
+    WEBHOOK_SSL_PRIV,
+    WEBHOOK_URL_BASE,
+    WEBHOOK_URL_PATH,
+    token,
+    webhook,
+)
 from PostgreSQL import PostgreSQL
+from services import Shooter, Statistic, ValidateUrl
 
 app = web.Application()
 
@@ -24,46 +32,46 @@ class Core(AbstractCore):
         Отвечает за вызов методов при определенных командах из чата и за нажатие кнопок
         """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.bot = AsyncTeleBot(token)
 
         @self.bot.message_handler(commands=['start'])
         @exception
-        async def _command_start(message: telebot.types.Message or telebot.types.CallbackQuery):
+        async def _command_start(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Срабатывает при вводе команды /start"""
             await self.process_comand_start(message)
 
         @self.bot.message_handler(commands=['admin'])
         @exception
-        async def _command_admin(message: telebot.types.Message or telebot.types.CallbackQuery):
+        async def _command_admin(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Срабатывает при вводе команды /admin"""
 
             await self.process_comand_admin(message)
 
         @self.bot.message_handler(commands=['setadminchat'])
         @exception
-        async def _command_set_admin_chat(message: telebot.types.Message or telebot.types.CallbackQuery):
+        async def _command_set_admin_chat(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Срабатывает при вводе команды /setadminchat"""
 
             await self.process_set_admin_chat(message)
 
         @self.bot.message_handler(commands=['statistic'])
         @exception
-        async def _command_statistic(message: telebot.types.Message or telebot.types.CallbackQuery):
+        async def _command_statistic(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Срабатывает при вводе команды /statistic"""
 
             await self.process_get_statistic(message)
 
         @self.bot.message_handler(func=lambda message: True, content_types=['text'])
         @exception
-        async def _check_text_and_get_screen(message: telebot.types.Message):
+        async def _check_text_and_get_screen(message: telebot.types.Message) -> None:
             """Срабатывает при получении любых текстовых сообщений"""
             await self.process_check_text_and_get_screen(message)
 
         @self.bot.callback_query_handler(func=lambda c: True)
         @exception
         @info_log_message_async_callback
-        async def process_callback_btn(callback_query: types.CallbackQuery, info: dict):
+        async def process_callback_btn(callback_query: types.CallbackQuery, info: dict) -> None:
             """Срабатывает при нажатии на кнопку Подробнее.
                 Запрашивает необходимые данные о сайте с free API одного из WHOIS сервисов
                 и выдает полученную информацию пользователю
@@ -91,7 +99,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_comand_start(self, message: telebot.types.Message):
+    async def process_comand_start(self, message: telebot.types.Message) -> None:
         """Метод команды /start
             Проверяет есть ли такой пользователь в БД, если нет то добавляет, если есть то ообновляет информацию о нем.
             Посылает приветственное инф сообщение
@@ -101,16 +109,16 @@ class Core(AbstractCore):
             db_worker.update_user_in_db(message)
 
         await self.bot.send_message(message.chat.id,
-                                    f'👋🏻 Привет! Меня зовут Jpeger. Я - Бот для создания веб-скриншотов.'
-                                    f'Чтобы получить скриншот - отправьте URL адрес сайта. Например, wikipedia.org \n'
-                                    f'• С помощью бота вы можете проверять подозрительные ссылки. '
-                                    f'(Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)\n'
-                                    f'• Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, '
-                                    f'которые отправляют пользователи')
+                                    '👋🏻 Привет! Меня зовут Jpeger. Я - Бот для создания веб-скриншотов.'
+                                    'Чтобы получить скриншот - отправьте URL адрес сайта. Например, wikipedia.org \n'
+                                    '• С помощью бота вы можете проверять подозрительные ссылки. '
+                                    '(Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)\n'
+                                    '• Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, '
+                                    'которые отправляют пользователи')
 
     @info_log_message_async
     @exception
-    async def process_comand_admin(self, message: telebot.types.Message):
+    async def process_comand_admin(self, message: telebot.types.Message) -> None:
         """
 
         :param message: telebot.types.Message
@@ -125,18 +133,18 @@ class Core(AbstractCore):
         db_worker = PostgreSQL()
         admin_chat_id = db_worker.get_admin_chat_id()
         if not admin_chat_id:
-            await self.bot.send_message(message.chat.id, f'Административного чата еще нет.\n'
-                                                         f'Чтобы сделать этот чат чатом администратора бота,'
-                                                         f' введите команду /setadminchat')
+            await self.bot.send_message(message.chat.id, 'Административного чата еще нет.\n'
+                                                         'Чтобы сделать этот чат чатом администратора бота,'
+                                                         ' введите команду /setadminchat')
             return
         if admin_chat_id[0][0] == message.chat.id:
             await self.bot.send_message(message.chat.id,
-                                        f'/statistic - Получить статистику работы бота \n'
+                                        '/statistic - Получить статистику работы бота \n'
                                         )
 
     @info_log_message_async
     @exception
-    async def process_set_admin_chat(self, message: telebot.types.Message):
+    async def process_set_admin_chat(self, message: telebot.types.Message) -> None:
         """
         Назначает текущий чат чатом администратора, если он не назначен
         """
@@ -145,15 +153,15 @@ class Core(AbstractCore):
         if db_worker.set_admin_chat_in_db(message):
 
             await self.bot.send_message(message.chat.id,
-                                        f'Теперь этот чат административный, вам доступны все команды администратора \n'
-                                        f'Для вывода списка комманд /admin')
+                                        'Теперь этот чат административный, вам доступны все команды администратора \n'
+                                        'Для вывода списка комманд /admin')
         else:
             await self.bot.send_message(message.chat.id,
-                                        f'У этого бота уже назначен административный чат')
+                                        'У этого бота уже назначен административный чат')
 
     @info_log_message_async
     @exception
-    async def process_get_statistic(self, message: telebot.types.Message):
+    async def process_get_statistic(self, message: telebot.types.Message) -> None:
         """
 
         :param message: telebot.types.Message
@@ -171,7 +179,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_check_text_and_get_screen(self, message: telebot.types.Message):
+    async def process_check_text_and_get_screen(self, message: telebot.types.Message) -> None:
         """
 
         :param message: telebot.types.Message
@@ -202,16 +210,15 @@ class Core(AbstractCore):
             # Проверка была ли ошибка во время выполнения запроса
             if shooter._error:
                 # ОТправляем информацию об ошибке
-                img = open('animation.gif.mp4', 'rb')
-                await self.bot.send_video(message.chat.id, img)
-                img.close()
-                await self.bot.send_message(message.chat.id, f'*Ошибка выполнения запроса*',
-                                            parse_mode="Markdown")
-                await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
-                # Добавляем инфу в бд для статистики
-                db_worker.set_statistic_succses_false(message, validation_url.url, domen, filename, file_path, duration)
+                with open('animation.gif.mp4', 'rb') as file:
+                    await self.bot.send_video(message.chat.id, file)
+                    await self.bot.send_message(message.chat.id, '*Ошибка выполнения запроса*',
+                                                parse_mode="Markdown")
+                    await self.bot.delete_message(message.chat.id, message_id=send_message.message_id)
+                    # Добавляем инфу в бд для статистики
+                    db_worker.set_statistic_succses_false(message, validation_url.url, domen, filename, file_path, duration)
 
-                return
+                    return
             # Если ошибок нет, отправляем скрин инфу и кнопу
             with open(file_path, 'rb') as file:
                 markup = types.InlineKeyboardMarkup(row_width=1)
@@ -231,7 +238,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def get_data(self, request):
+    async def get_data(self, request: object) -> web.Response:
         """
 
         :param request:
@@ -247,7 +254,7 @@ class Core(AbstractCore):
             return web.Response(status=403)
 
     @exception
-    async def run(self):
+    async def run(self) -> None:
         """
 
         :return:
@@ -258,12 +265,13 @@ class Core(AbstractCore):
         await self.bot.polling(non_stop=True, skip_pending=True, timeout=40, request_timeout=40)  # to skip updates
 
     @exception
-    def run_webhook(self):
+    def run_webhook(self) -> None:
         """
         Запуск бота webhooks
         """
-        self.bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
-                             certificate=open(WEBHOOK_SSL_CERT, 'r'))
+        with open(WEBHOOK_SSL_CERT, 'r') as ssl_cert:
+            self.bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH,
+                                 certificate=ssl_cert)
 
         # Build ssl context
         context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
