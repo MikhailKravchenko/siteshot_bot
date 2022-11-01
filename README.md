@@ -1,59 +1,59 @@
 # Jpeger bot for Telegram
-Бот для создания веб-скриншотов.
-Чтобы получить скриншот - отправьте URL адрес сайта. 
-Например, wikipedia.org.
+Bot for creating web screenshots.
+To get a screenshot - send the URL of the site.
+For example, wikipedia.org.
 
-• С помощью бота вы можете проверять подозрительные ссылки. (Айпилоггеры, фишинговые веб-сайты, скримеры и т.п)
+• With the help of a bot you can check suspicious links. (IP loggers, phishing websites, screamers, etc.)
 
-• Вы также можете добавить меня в свои чаты, и я смогу проверять ссылки, которые отправляют пользователи
+• You can also add me to your chats so I can check the links that users send
 
-# Documentation
+# documentation
 
-Полезные команды:
+Useful commands:
 
-    /start - Приветствие
-    /admin - Команда для админского чата выводит информацию о командах доступных для администратора
-    /setadminchat - назначает текущий чат административным
-    /statistic - получение статистики о работе бота (доступ только в админском чате)
+    /start - Welcome
+    /admin - Command for admin chat displays information about the commands available to the administrator
+    /setadminchat - sets current chat as admin chat
+    /statistic - getting statistics about the bot's work (access only in the admin chat)
 
 
 
 # Get Started:
 
-Для запуска понадобится сформировать докер контейнеры и запустить их. 
-Если на сервере не установлен Docker, то самое время его установить:
+To start, you need to create docker containers and run them.
+If Docker is not installed on the server, then it's time to install it:
 
 https://docs.docker.com/engine/install/ubuntu/
 https://docs.docker.com/compose/install/compose-plugin/#installing-compose-on-linux-systems
 
-Клонировать репозиторий в удобное место:
+Clone the repository to a convenient location:
 
     git@github.com:MikhailKravchenko/siteshot_bot.git
 
-Установить переменные окружения:
+Set environment variables:
 
     src/env.py
 
-- для справки о webhook https://dvmn.org/encyclopedia/about-chatbots/webhook/
+- for help about webhook https://dvmn.org/encyclopedia/about-chatbots/webhook/
 
-webhook = True
+webhook=true
     
-    Потребуется  указать token = ''
-    + дополнительно указать сертификаты ssl и параметры сервера
+    You will need to specify token = ''
+    + additionally specify ssl certificates and server parameters
     WEBHOOK_HOST = '0.0.0.0'
-    WEBHOOK_PORT = 443  # 443, 80, 88 or 8443 (port need to be 'open')
-    WEBHOOK_LISTEN = '0.0.0.0'  # In some VPS you may need to put here the IP addr
-    WEBHOOK_SSL_CERT = 'webhook_cert.pem'  # Path to the ssl certificate
-    WEBHOOK_SSL_PRIV = 'webhook_pkey.pem'  # Path to the ssl private key
+    WEBHOOK_PORT = 443 # 443, 80, 88 or 8443 (port need to be 'open')
+    WEBHOOK_LISTEN = '0.0.0.0' # In some VPS you may need to put here the IP addr
+    WEBHOOK_SSL_CERT = 'webhook_cert.pem' # Path to the ssl certificate
+    WEBHOOK_SSL_PRIV = 'webhook_pkey.pem' # Path to the ssl private key
 
 webhook = False
 
-    Потребуется только указать token = ''
+    You only need to specify token = ''
 
- Собираем образы:
+ Collecting images:
 
     docker-compose -f docker-compose.yml up -d --build
 
-# Information
-История разработки:
+#Information
+Development history:
 https://github.com/users/MikhailKravchenko/projects/1
