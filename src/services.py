@@ -2,12 +2,12 @@
 import re
 import time
 from datetime import datetime
-
+from urllib.parse import urlparse
 import telebot
 from pyppeteer import launch
 from decor import exception, info_log, info_log_message_async
 from abstract import AbstractShooter, AbstractValidateUrl
-from urllib.parse import urlparse
+
 
 
 class ValidateUrl(AbstractValidateUrl):
@@ -111,7 +111,7 @@ class Statistic:
 
     def __init__(self, db_worker):
         self.db_worker = db_worker
-        pass
+
 
     @info_log
     def get_statistic_for_admin(self) -> str:

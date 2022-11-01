@@ -37,7 +37,7 @@ class PostgreSQL(AbstractPostgresQL):
                 self.cursor.execute(
                     "INSERT INTO users (user_id, user_name, first_name) VALUES (%s, %s, %s)",
                     (str(message.chat.id), str(message.chat.username), str(first_name)))
-            except Exception as e:
+            except Exception:
                 return False
 
             return True
@@ -103,7 +103,7 @@ class PostgreSQL(AbstractPostgresQL):
                 self.cursor.execute(
                     "INSERT INTO request (url, domen, success, user_id, file_name,file_path, duration) VALUES (%s, %s, %s,%s, %s, %s, %s)",
                     (str(url), str(domen), True, str(message.chat.id), str(file_name), str(file_path), int(duration)))
-            except Exception as e:
+            except Exception:
 
                 return False
 
@@ -129,7 +129,7 @@ class PostgreSQL(AbstractPostgresQL):
                 self.cursor.execute(
                     "INSERT INTO request (url, domen, success, user_id, file_name,file_path, duration) VALUES (%s, %s, %s,%s, %s, %s, %s)",
                     (str(url), str(domen), False, str(message.chat.id), file_name, file_path, duration))
-            except Exception as e:
+            except Exception:
 
                 return False
 
@@ -161,7 +161,7 @@ class PostgreSQL(AbstractPostgresQL):
                 self.cursor.execute(
                     "INSERT INTO admin_chat (chat_id) VALUES (%s)",
                     (str(message.chat.id),))
-            except Exception as e:
+            except Exception:
 
                 return False
 

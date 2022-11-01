@@ -56,8 +56,8 @@ def info_log(function):
         res = function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        d = {"facility": function.__name__, "run_duration": float(duration)}
-        logging.info(function.__name__, extra=d)
+        log_dict = {"facility": function.__name__, "run_duration": float(duration)}
+        logging.info(function.__name__, extra=log_dict)
         return res
 
     return wrapper
@@ -77,12 +77,12 @@ def info_log_message(function):
         res = function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        d = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
+        log_dict = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
              'first_name': str(first_name),
              'text': str(args[1].text),
              'time_answer':
                  str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
-        logging.info('System log', extra=d)
+        logging.info('System log', extra=log_dict)
         return res
 
     return wrapper
@@ -98,8 +98,8 @@ def info_log_async(function):
         res = await function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        d = {"facility": function.__name__, "run_duration": float(duration)}
-        logging.info(function.__name__, extra=d)
+        log_dict = {"facility": function.__name__, "run_duration": float(duration)}
+        logging.info(function.__name__, extra=log_dict)
         return res
 
     return wrapper
@@ -118,12 +118,12 @@ def info_log_message_async(function):
         res = await function(*args, **kwargs)
         endtime = time.time()
         duration = endtime - starttime
-        d = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
+        log_dict = {'facility': function.__name__, "run_duration": float(duration), 'user.id': str(args[1].from_user.id),
              'first_name': str(first_name),
              'text': str(args[1].text),
              'time_answer':
                  str(datetime.utcfromtimestamp(args[1].date).strftime('%Y-%m-%d %H:%M:%S'))}
-        logging.info('System log', extra=d)
+        logging.info('System log', extra=log_dict)
         return res
 
     return wrapper
@@ -142,12 +142,12 @@ def info_log_message_async_callback(function):
         res = await function(*args)
         endtime = time.time()
         duration = endtime - starttime
-        d = {'facility': function.__name__, "run_duration": float(duration),
+        log_dict = {'facility': function.__name__, "run_duration": float(duration),
              'user.id': str(args[0].message.from_user.id), 'first_name': str(first_name),
              'text': str(args[0].message.text),
              'time_answer':
                  str(datetime.utcfromtimestamp(args[0].message.date).strftime('%Y-%m-%d %H:%M:%S'))}
-        logging.info('System log', extra=d)
+        logging.info('System log', extra=log_dict)
         return res
 
     return wrapper
