@@ -20,4 +20,4 @@ ignore =
     A003,
 per-file-ignores =
     */abstract.py:ANN201,ANN001
-    */config.py:F401,F811
+
