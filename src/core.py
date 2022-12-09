@@ -39,14 +39,14 @@ class Core(AbstractCore):
         @exception
         async def _command_start(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Fires when a command is entered /start"""
-            await self.process_comand_start(message)
+            await self.process_command_start(message)
 
         @self.bot.message_handler(commands=['admin'])
         @exception
         async def _command_admin(message: telebot.types.Message or telebot.types.CallbackQuery) -> None:
             """Fires when a command is entered /admin"""
 
-            await self.process_comand_admin(message)
+            await self.process_command_admin(message)
 
         @self.bot.message_handler(commands=['setadminchat'])
         @exception
@@ -99,7 +99,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_comand_start(self, message: telebot.types.Message) -> None:
+    async def process_command_start(self, message: telebot.types.Message) -> None:
         """/start command method
              Checks whether there is such a user in the database, if not, then adds, if there is, then updates information about him.
              Sends a welcome message
@@ -118,7 +118,7 @@ class Core(AbstractCore):
 
     @info_log_message_async
     @exception
-    async def process_comand_admin(self, message: telebot.types.Message) -> None:
+    async def process_command_admin(self, message: telebot.types.Message) -> None:
         """
 
         :param message: telebot.types.Message
